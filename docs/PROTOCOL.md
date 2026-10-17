@@ -358,6 +358,20 @@ The unit never accepts inbound connections and ignores the app's LAN discovery b
 | WiFi module | **`GRJWB05-J10`**, part `300145000093`, label firmware `WB05DF13V3.10` (matches the `hid` the unit reports). Castellated module (10 pads on each long edge) with a printed antenna, **soldered** onto the display board. FCC ID `2ADAP-GRJWB05J10`, WiFi + BLE. |
 | WiFi SoC | **Realtek RTL8720DF** (AmebaD), FreeRTOS, per Gree's TÜV SÜD EN 303 645 certificate, which lists GRJWB04-J and GRJWB05-J5 as 8720CF and GRJWB04-J4, GRJWB05-J2 and GRJWB05-J10 as 8720DF |
 
+**GRJWB05-J10 pads** (from the module's FCC user manual, FCC ID `2ADAP-GRJWB05J10`; 3.3 V supply,
+30 × 17.7 mm, 18 castellated pads numbered anticlockwise). Seen from the shield side with the
+antenna on the left:
+
+```
+Top row, left → right:     16    15    14    13    12    11    10     9       8
+                          PB22  MISO   GND  3.3V  MOSI   SCL   SDA  LOG_RX  LOG_TX
+Bottom row, left → right:  17    18     1     2     3     4       5      6      7
+                           —   PA27   GND  3.3V   ADC  UART_TX UART_RX LP_SDA LP_SCL
+```
+
+`UART_TX`/`UART_RX` (pads 4, 5) are the link to the indoor unit; `LOG_TX`/`LOG_RX` (pads 8, 9) are
+the AmebaD log UART (PA7/PA8), which is also the ROM download port (PA7 held low at reset).
+
 Notes for anyone hoping for local control:
 
 * There is no separate plug-in WiFi module on this model and no `WIFI` connector on the main
@@ -366,8 +380,9 @@ Notes for anyone hoping for local control:
 * The display board has no processor of its own: two 16-pin display driver ICs, the IR receiver,
   the button, and pull-up/series resistor networks (4.7 kΩ, 330 Ω, 200 Ω) on the signal lines. The
   WiFi module's UART therefore very likely runs straight to the main board over that cable.
-* ESPHome (via LibreTiny) supports the RTL8710B and RTL8720**C** families but not AmebaD
-  (RTL8720**D**), so ESPHome can't simply be flashed onto this module.
+* Released ESPHome (via LibreTiny) supports the RTL8710B and RTL8720**C** families but not yet
+  AmebaD (RTL8720**D**). Support is in progress upstream: libretiny-eu/libretiny#403 (AmebaD family),
+  libretiny-eu/ltchiptool#98 (flashing) and esphome/esphome#18718 (RTL8720D in ESPHome).
 * The main board's `COM-MANUAL` port is for Gree's optional wired controller (4 wires: GND, 12 V,
   RS-485 A/B; see [gree-wired-proto](https://github.com/maxim-smirnov/gree-wired-proto)), not a
   WiFi port.
