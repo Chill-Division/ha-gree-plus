@@ -66,7 +66,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: GreePlusConfigEntry) -> 
     )
     coordinators = {dev.mac: GreeDeviceCoordinator(hass, entry, client, dev) for dev in devices}
 
-    last_key_refresh = 0.0
+    last_key_refresh = float("-inf")
 
     async def refresh_keys() -> None:
         """Re-read device keys: a unit's key changes every time it is re-paired in the app."""
