@@ -1,0 +1,107 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Gree+ account",
+        "description": "Sign in with the account you use in the Gree+ app. Every air conditioner in the account is added.",
+        "data": {
+          "username": "Email",
+          "password": "Password",
+          "region": "Server region"
+        },
+        "data_description": {
+          "region": "The server your Gree+ account lives on. New Zealand accounts use the Australia server. Auto-detect tries each server in turn."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-enter Gree+ password",
+        "description": "The Gree+ cloud rejected the stored password for {username}.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The email or password was not accepted.",
+      "cannot_connect": "Could not reach the Gree+ cloud. Check the network and try again."
+    },
+    "abort": {
+      "already_configured": "This Gree+ account is already configured.",
+      "reauth_successful": "Re-authentication was successful.",
+      "wrong_account": "That password belongs to a different Gree+ account."
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "auto": "Auto-detect",
+        "australia": "Australia / New Zealand",
+        "europe": "Europe",
+        "north_america": "North America",
+        "south_america": "South America",
+        "latin_america": "Latin America",
+        "east_south_asia": "East / South-East Asia",
+        "india": "India",
+        "middle_east": "Middle East",
+        "russia": "Russia",
+        "china": "China mainland"
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "gree_plus": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "Auto",
+              "low": "Low",
+              "medium_low": "Medium-low",
+              "medium": "Medium",
+              "medium_high": "Medium-high",
+              "high": "High",
+              "quiet": "Quiet",
+              "turbo": "Turbo"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Off",
+              "swing": "Swing (full range)",
+              "fixed_top": "Fixed: top",
+              "fixed_upper": "Fixed: upper",
+              "fixed_middle": "Fixed: middle",
+              "fixed_lower": "Fixed: lower",
+              "fixed_bottom": "Fixed: bottom"
+            }
+          },
+          "swing_horizontal_mode": {
+            "state": {
+              "off": "Off",
+              "swing": "Swing (full range)",
+              "fixed_left": "Fixed: left",
+              "fixed_left_center": "Fixed: left-centre",
+              "fixed_center": "Fixed: centre",
+              "fixed_right_center": "Fixed: right-centre",
+              "fixed_right": "Fixed: right"
+            }
+          }
+        }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Indoor temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "indoor_coil_temperature": {
+        "name": "Indoor coil temperature"
+      },
+      "compressor_frequency": {
+        "name": "Compressor frequency"
+      }
+    }
+  }
+}
