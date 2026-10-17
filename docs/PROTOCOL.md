@@ -348,17 +348,37 @@ was reset and paired again:
 
 The unit never accepts inbound connections and ignores the app's LAN discovery broadcast.
 
-**WiFi module hardware.** The MAC prefix `58:0d:0d` is registered to Gree Electric, so it doesn't
-reveal the chip. The network stack looks like plain lwIP defaults (IP TTL 255, TCP MSS 1460,
-window 7300, SYN with only the MSS option, DHCP without a hostname). That differs from Espressif's
-ESP-IDF defaults (TTL 64, MSS 1440, the hostname `espressif`), so the module is probably not an
-ESP32. The previous Gree module generation (GRJWB04-J) is reported to use a Realtek RTL8720CF.
-The firmware name `U-4MWB05DF13V3.10` suggests a WB05-series module. *Unverified until the
-module is opened.*
+**WiFi module hardware.** Identified by opening the display box of a GWH24ATEXF-K6DNA1E/I
+(Gree **Alto** series, manufactured 2025-04):
+
+| Part | Identification |
+| --- | --- |
+| Indoor main board | `300002063880` (from Gree Australia's Alto spare parts list) |
+| Receiver/display board | `300001061521`, board `D5683AS`, PCB `GRJ568-B V1` (sealed plastic box behind the front panel: 7-segment display, IR receiver `REC1`, `KEY` button, power and WiFi LEDs) |
+| WiFi module | **`GRJWB05-J10`**, part `300145000093`, label firmware `WB05DF13V3.10` (matches the `hid` the unit reports). Castellated module (10 pads on each long edge) with a printed antenna, **soldered** onto the display board. FCC ID `2ADAP-GRJWB05J10`, WiFi + BLE. |
+| WiFi SoC | **Realtek RTL8720DF** (AmebaD), FreeRTOS, per Gree's TÜV SÜD EN 303 645 certificate, which lists GRJWB04-J and GRJWB05-J5 as 8720CF and GRJWB04-J4, GRJWB05-J2 and GRJWB05-J10 as 8720DF |
+
+Notes for anyone hoping for local control:
+
+* There is no separate plug-in WiFi module on this model and no `WIFI` connector on the main
+  board; the module lives on the display board, which connects to the main board through a
+  5-pin and a 6/7-pin connector (about a dozen wires).
+* The display board has no processor of its own: two 16-pin display driver ICs, the IR receiver,
+  the button, and pull-up/series resistor networks (4.7 kΩ, 330 Ω, 200 Ω) on the signal lines. The
+  WiFi module's UART therefore very likely runs straight to the main board over that cable.
+* ESPHome (via LibreTiny) supports the RTL8710B and RTL8720**C** families but not AmebaD
+  (RTL8720**D**), so ESPHome can't simply be flashed onto this module.
+* The main board's `COM-MANUAL` port is for Gree's optional wired controller (4 wires: GND, 12 V,
+  RS-485 A/B; see [gree-wired-proto](https://github.com/maxim-smirnov/gree-wired-proto)), not a
+  WiFi port.
+* The unit's own wiring label (`600007067482`) shows main board `AP2` with connectors `T-SENSOR`,
+  `DISP`, `DC-MOTOR`, `COM-MANUAL`, `SWING-UD`, `SWING-LR`, `HEALTH (UVC)`, `DOOR-C (DRY-C)`, `JUMP`,
+  and display board `AP1` ("receiver and display board") on `DISP`.
 
 ## Open questions
 
 * What, if anything, is published on `event/<mac>/#`.
 * Whether `Add0.5` enables half-degree set points in °C on these units.
 * The content of the port 6100 telemetry messages.
-* Which chip the WB05 WiFi module uses (see above).
+* Which display-cable pins carry the WiFi module's UART (needs a logic analyser), and whether it
+  is the same 4800 8E1 serial protocol older plug-in Gree modules use.
