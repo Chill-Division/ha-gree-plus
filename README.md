@@ -81,6 +81,8 @@ fetches the new key by itself. A re-paired unit may come back switched off, so c
   If the internet or Gree's cloud is down, the unit keeps running its last settings and its
   own thermostat, and can still be used with the IR remote.
 * Using the integration does not log the Gree+ app out; both can be used side by side.
+* Want local control instead? [esphome-gree-wb05](https://github.com/Chill-Division/esphome-gree-wb05)
+  is an experimental effort to run ESPHome on the units' own WiFi module.
 * Only Celsius set points are supported.
 * Tested with Gree units on model ID `10001`, WiFi firmware V3.10, Gree+ region New Zealand.
   Other Gree+ units that use the same cloud protocol should work. Please open an issue with your
